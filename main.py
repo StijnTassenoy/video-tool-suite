@@ -10,7 +10,7 @@ install()
 working_directory = ""
 
 
-def print_menu():
+def print_menu() -> None:
     if os.path.isdir(working_directory):
         print(f"\nCurrent directory: {str(working_directory)}\n")
 
@@ -21,7 +21,7 @@ def print_menu():
     rprint("[bold blue][0][/bold blue] Exit")
 
 
-def set_directory():
+def set_directory() -> None:
     global working_directory
     working_directory = input("Input new directory: ")
     while True:
@@ -33,7 +33,7 @@ def set_directory():
             working_directory = input("Invalid directory...\nInput new directory: ")
 
 
-def choose_tool():
+def choose_tool() -> None:
     video_files = get_all_videofiles_from_directory(working_directory, ["mp4", "mkv"])
     print_files_with_index(video_files)
     input()
