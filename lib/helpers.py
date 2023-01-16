@@ -1,6 +1,6 @@
 import os
 import re
-from typing import List
+from typing import List, Tuple, Optional
 
 from rich import print as rprint
 
@@ -10,12 +10,13 @@ def clear_screen() -> None:
     os.system("cls" if os.name == "nt" else "clear")
 
 
-def get_all_videofiles_from_directory(working_directory: str, extensions: List[str]) -> List[str]:
+def get_all_videofiles_from_directory(working_directory: str, extensions: Tuple) -> List[str]:
     """ Gets all files from a given path wit certain extensions. """
-    files = [f for f in os.listdir(working_directory)]  # if os.path.isfile(f)]
-    for file in files:
-        if not file.endswith(tuple(extensions)):
-            files.remove(file)
+    files = []
+
+    for file in os.listdir(working_directory):
+        if file.endswith(extensions):
+            files.append(file)
     return files
 
 
@@ -42,4 +43,47 @@ def convert_timestamp_to_seconds(timestamp_string) -> str:
     """ Convert hh:mm:ss to seconds string. """
     hours, minutes, seconds = map(int, timestamp_string.split(":"))
     return f"{3600 * hours + 60 * minutes + seconds}s"
+
+
+def select_video_files(working_directory: str) -> Optional[List[str]]:
+    """ Select valid input for video files from a directory. """
+    video_files = get_all_videofiles_from_directory(working_directory, (".mp4", ".mkv"))
+    if len(video_files) == 1:
+        print_files_with_index(video_files)
+    elif len(video_files) > 1:
+        rprint("[bold blue][0][/bold blue] All files")
+        print_files_with_index(video_files)
+        choice = input("Make a choice or press enter to return: ")
+        while True:
+            try:
+                if choice in ["back", "return", "no", ""]:
+                    break
+                if choice == "0":
+                    return video_files
+                elif int(choice) - 1 in range(len(video_files)) and not "":
+                    return [video_files[int(choice) - 1]]
+            except ValueError as ve:
+                choice = input("Not an option. Make a valid choice or press enter to return: ")
+    return None
+
+
+def ask_start_and_endtime() -> Tuple[str, str]:
+    """ Ask the user for start and end time. """
+    start_time = input("Input the starting time of the clip: ")
+    end_time = input("Input the ending time of the clip: ")
+    if "s" in start_time or "m" in start_time:
+        start_time = convert_to_timestamp(start_time)
+    if "s" in end_time or "m" in end_time:
+        end_time = convert_to_timestamp(end_time)
+    return start_time, end_time
+
+
+def generate_output_filename(filename: str, tool_suffix: str) -> str:
+    """ Generates the new filename with a suffix. """
+    if filename.endswith("mp4"):
+        return filename.replace(".mp4", f"{tool_suffix}.mp4")
+    elif filename.endswith("mkv"):
+        return filename.replace(".mkv", f"{tool_suffix}.mkv")
+    else:
+        return filename
 

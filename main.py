@@ -1,20 +1,16 @@
 import os
 from typing import List
 
-from lib.helpers import clear_screen, get_all_videofiles_from_directory,  print_files_with_index
+from lib.helpers import clear_screen
 from lib.constants import WELCOME_MESSAGE
 from lib.logger import LOGGER
 from tools import get_tool_classes
-from tools.base import BaseTool
-
 from rich import print as rprint
 from rich.traceback import install
 
 install()
-working_directory = ""
 
-#TODO, change to subclasses
-tools_list = ["Clipper"]
+working_directory = ""
 
 
 def print_menu() -> None:
@@ -52,9 +48,6 @@ def set_directory() -> None:
 
 # Option 2
 def choose_tool() -> None:
-    # video_files = get_all_videofiles_from_directory(working_directory, ["mp4", "mkv"])
-    # print_files_with_index(video_files)
-    # print(BaseTool.__subclasses__())
     tools_name_list = print_tools()
     tool_choice = input("Choose a tool: ")
     while True:
@@ -63,8 +56,10 @@ def choose_tool() -> None:
                 if tool.check_tool(tools_name_list[int(tool_choice)-1]):
                     try:
                         t = tool(working_directory)
+                        t.use_tool()
                     except Exception as e:
                         LOGGER.exception(e)
+                        input("Press enter to continue...")
             break
         else:
             clear_screen()
