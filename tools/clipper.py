@@ -1,8 +1,7 @@
 import subprocess
-from abc import abstractmethod
 
-from lib.logger import LOGGER
 from tools.base import BaseTool
+from lib.logger import LOGGER
 
 
 class Clipper(BaseTool):
@@ -11,8 +10,8 @@ class Clipper(BaseTool):
         self.working_directory = working_directory
 
     @classmethod
-    def get_toolname(cls) -> str:
-        return cls.__class__.__name__
+    def check_tool(cls, tool_option: str) -> bool:
+        return cls.__class__.__name__ in tool_option
 
     @staticmethod
     def __clip_video(input_path: str, output_path: str, start_time: str, end_time: str):
@@ -23,5 +22,4 @@ class Clipper(BaseTool):
         ffmpeg_command += ["-copyts", output_path]
         LOGGER.debug(str(ffmpeg_command))
         subprocess.Popen(ffmpeg_command)
-
 

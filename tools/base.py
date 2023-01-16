@@ -10,5 +10,5 @@ class BaseTool(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def get_toolname(cls) -> str:
+    def check_tool(cls, tool_option: str) -> bool:
         pass

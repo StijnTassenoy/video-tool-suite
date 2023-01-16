@@ -1,13 +1,20 @@
 import os
+from typing import List
+
 from lib.helpers import clear_screen, get_all_videofiles_from_directory,  print_files_with_index
 from lib.constants import WELCOME_MESSAGE
 from lib.logger import LOGGER
+from tools import get_tool_classes
+from tools.base import BaseTool
 
 from rich import print as rprint
 from rich.traceback import install
 
 install()
 working_directory = ""
+
+#TODO, change to subclasses
+tools_list = ["Clipper"]
 
 
 def print_menu() -> None:
@@ -21,6 +28,16 @@ def print_menu() -> None:
     rprint("[bold blue][0][/bold blue] Exit")
 
 
+def print_tools() -> List:
+    tools = get_tool_classes()
+    tools_name_list = []
+    for idx, tool in enumerate(tools):
+        rprint(f"[bold blue][{idx+1}][/bold blue] {tool.__name__}")
+        tools_name_list.append(tool.__name__)
+    return tools_name_list
+
+
+# Option 1
 def set_directory() -> None:
     global working_directory
     working_directory = input("Input new directory: ")
@@ -33,10 +50,25 @@ def set_directory() -> None:
             working_directory = input("Invalid directory...\nInput new directory: ")
 
 
+# Option 2
 def choose_tool() -> None:
-    video_files = get_all_videofiles_from_directory(working_directory, ["mp4", "mkv"])
-    print_files_with_index(video_files)
-    input()
+    # video_files = get_all_videofiles_from_directory(working_directory, ["mp4", "mkv"])
+    # print_files_with_index(video_files)
+    # print(BaseTool.__subclasses__())
+    tools_name_list = print_tools()
+    tool_choice = input("Choose a tool: ")
+    while True:
+        if int(tool_choice)-1 in range(len(tools_name_list)) and not "":
+            for tool in get_tool_classes():
+                if tool.check_tool(tools_name_list[int(tool_choice)-1]):
+                    try:
+                        t = tool(working_directory)
+                    except Exception as e:
+                        LOGGER.exception(e)
+            break
+        else:
+            clear_screen()
+            tool_choice = input("Invalid Tool Choice! Choose a tool: ")
 
 
 def main():
