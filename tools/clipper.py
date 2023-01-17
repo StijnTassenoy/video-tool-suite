@@ -23,7 +23,7 @@ class Clipper(BaseTool):
         return tool_option in cls.__name__
 
     @staticmethod
-    def __clip_video(input_path: str, output_path: str, start_time: str, end_time: str):
+    def __clip_video(input_path: str, output_path: str, start_time: str, end_time: str) -> None:
         """ FFMPEG Clip command. """
         ffmpeg_command = ["ffmpeg"]
         ffmpeg_command += ["-ss", start_time]
