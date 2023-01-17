@@ -12,3 +12,7 @@ class BaseTool(metaclass=ABCMeta):
     @abstractmethod
     def check_tool(cls, tool_option: str) -> bool:
         pass
+
+    @abstractmethod
+    def use_tool(self) -> bool:
+        pass

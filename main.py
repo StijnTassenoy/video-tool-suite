@@ -1,19 +1,23 @@
+# Python Imports #
 import os
 from typing import List
 
+# External Module Imports #
+from rich import print as rprint
+from rich.traceback import install
+
+# VideoToolSuite Imports #
 from lib.helpers import clear_screen
 from lib.constants import WELCOME_MESSAGE
 from lib.logger import LOGGER
 from tools import get_tool_classes
-from rich import print as rprint
-from rich.traceback import install
 
 install()
-
 working_directory = ""
 
 
 def print_menu() -> None:
+    """ Display the main menu. """
     if os.path.isdir(working_directory):
         print(f"\nCurrent directory: {str(working_directory)}\n")
 
@@ -25,6 +29,7 @@ def print_menu() -> None:
 
 
 def print_tools() -> List:
+    """ Display the tools menu dynamically. """
     tools = get_tool_classes()
     tools_name_list = []
     for idx, tool in enumerate(tools):
@@ -35,6 +40,7 @@ def print_tools() -> List:
 
 # Option 1
 def set_directory() -> None:
+    """ The first option from the main menu. Input directory. """
     global working_directory
     working_directory = input("Input new directory: ")
     while True:
@@ -48,6 +54,7 @@ def set_directory() -> None:
 
 # Option 2
 def choose_tool() -> None:
+    """ The second option from the main menu. Input tool. """
     tools_name_list = print_tools()
     tool_choice = input("Choose a tool: ")
     while True:

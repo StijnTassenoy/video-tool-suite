@@ -1,7 +1,9 @@
+# Python Imports #
 import os
 import re
 from typing import List, Tuple, Optional
 
+# External Module Imports #
 from rich import print as rprint
 
 
@@ -21,7 +23,7 @@ def get_all_videofiles_from_directory(working_directory: str, extensions: Tuple)
 
 
 def print_files_with_index(file_list: List[str]) -> None:
-    print()
+    """ Print all files from a list with their 1-based index. """
     for idx, file in enumerate(file_list):
         rprint(f"[bold blue][{str(idx+1)}][/bold blue] {file}")
 
@@ -50,6 +52,8 @@ def select_video_files(working_directory: str) -> Optional[List[str]]:
     video_files = get_all_videofiles_from_directory(working_directory, (".mp4", ".mkv"))
     if len(video_files) == 1:
         print_files_with_index(video_files)
+        print()
+        return video_files
     elif len(video_files) > 1:
         rprint("[bold blue][0][/bold blue] All files")
         print_files_with_index(video_files)
@@ -67,15 +71,24 @@ def select_video_files(working_directory: str) -> Optional[List[str]]:
     return None
 
 
-def ask_start_and_endtime() -> Tuple[str, str]:
-    """ Ask the user for start and end time. """
-    start_time = input("Input the starting time of the clip: ")
-    end_time = input("Input the ending time of the clip: ")
-    if "s" in start_time or "m" in start_time:
-        start_time = convert_to_timestamp(start_time)
-    if "s" in end_time or "m" in end_time:
-        end_time = convert_to_timestamp(end_time)
+def ask_start_and_end_time() -> Tuple[str, str]:
+    """ Return a valid start and end time. """
+    start_time = ask_for_time("Input the starting time of the clip: ")
+    end_time = ask_for_time("Input the ending time of the clip: ")
     return start_time, end_time
+
+
+def ask_for_time(prompt: str) -> str:
+    """ Ask the user for a valid start and end time. """
+    time = input(prompt)
+    while True:
+        if "s" in time or "m" in time:
+            time = convert_to_timestamp(time)
+            break
+        elif re.search(r"\d+:\d+", time):
+            break
+        time = input("Wrong input...\n" + prompt)
+    return time
 
 
 def generate_output_filename(filename: str, tool_suffix: str) -> str:
