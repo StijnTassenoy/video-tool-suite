@@ -1,5 +1,6 @@
 from .base import BaseTool
 from tools.clipper import Clipper
+from tools.cropper import Cropper
 from tools.change_aspect_ratio import ChangeAspectRatio
 
 
