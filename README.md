@@ -14,3 +14,6 @@
 ```
 
 A set of tools to quickly edit videos with.
+
+## clipper
+Choose start and end time to create a cip out of a video file.
