@@ -16,4 +16,7 @@
 A set of tools to quickly edit videos with.
 
 ## clipper
-Choose start and end time to create a cip out of a video file.
+Choose start and end time to create a clip out of a video file.  
+
+## Aspect Ratio Resizer
+Specify aspect ratio and the type of aspect ratio and re-encode video file(s) accordingly.
